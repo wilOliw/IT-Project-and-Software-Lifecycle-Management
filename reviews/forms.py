@@ -1,10 +1,13 @@
 from django import forms
+
+from bookings.models import Appointment
 from .models import Review, ReviewResponse
 from masters.models import Master
 from services.models import Service
 
 class ReviewForm(forms.ModelForm):
     """Форма создания отзыва"""
+
     rating = forms.ChoiceField(
         choices=[(i, f"{i} звезд") for i in range(1, 6)],
         widget=forms.RadioSelect(attrs={'class': 'rating-input'}),
@@ -33,19 +36,10 @@ class ReviewForm(forms.ModelForm):
         # Фильтруем только активных мастеров и услуги
         self.fields['master'].queryset = Master.objects.filter(is_active=True)
         self.fields['service'].queryset = Service.objects.filter(is_active=True)
-    
+
     def clean(self):
         cleaned_data = super().clean()
-        master = cleaned_data.get('master')
-        service = cleaned_data.get('service')
-        
-        # Проверяем, что мастер предоставляет выбранную услугу
-        if master and service:
-            if not master.services.filter(id=service.id).exists():
-                raise forms.ValidationError(
-                    "Выбранный мастер не предоставляет эту услугу"
-                )
-        
+
         return cleaned_data
 
 class ReviewResponseForm(forms.ModelForm):

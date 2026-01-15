@@ -43,7 +43,7 @@
                                     <td>{{ appointment.pk }}</td>
                                     <td>{{ appointment.client.get_full_name|default:appointment.client.username }}</td>
                                     <td>{{ appointment.service.name }}</td>
-                                    <td>{{ appointment.master.name }}</td>
+                                    <td>{{ appointment.master }}</td>
                                     <td>{{ appointment.appointment_date }}</td>
                                     <td>{{ appointment.start_time }} - {{ appointment.end_time }}</td>
                                     <td>

@@ -102,13 +102,6 @@ echo "   Сервер будет доступен по адресу: http://127.
 echo "   Для остановки нажмите Ctrl+C"
 echo ""
 
-# Открываем браузер через 2 секунды (работает на macOS)
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    (sleep 2 && open "http://127.0.0.1:8000/") &
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    (sleep 2 && xdg-open "http://127.0.0.1:8000/") &> /dev/null &
-fi
-
 # Запускаем сервер разработки
 python manage.py runserver 127.0.0.1:8000
 

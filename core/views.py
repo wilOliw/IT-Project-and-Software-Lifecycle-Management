@@ -17,7 +17,7 @@ def home(request):
         'recent_reviews': Review.objects.filter(is_active=True).order_by('-created_at')[:5],
         'contacts': Contact.objects.filter(is_active=True),
     }
-    return render(request, 'core/home_minimal.html', context)
+    return render(request, 'core/home.html', context)
 
 def about(request):
     """Страница о студии"""

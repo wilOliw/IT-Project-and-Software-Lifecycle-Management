@@ -11,26 +11,29 @@ class AppointmentForm(forms.ModelForm):
     service = forms.ModelChoiceField(
         queryset=Service.objects.filter(is_active=True),
         empty_label="Выберите услугу",
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Услуга"
     )
     master = forms.ModelChoiceField(
         queryset=Master.objects.filter(is_active=True),
-        empty_label="Любой мастер",
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        empty_label="Выберите мастера",
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Мастер"
     )
     appointment_date = forms.DateField(
         widget=forms.DateInput(attrs={
             'class': 'form-control',
             'type': 'date',
             'min': timezone.now().date().isoformat()
-        })
+        }),
+        label="Дата посещения"
     )
     start_time = forms.TimeField(
         widget=forms.TimeInput(attrs={
             'class': 'form-control',
             'type': 'time'
-        })
+        }),
+        label="Время начала"
     )
     notes = forms.CharField(
         widget=forms.Textarea(attrs={
@@ -38,6 +41,7 @@ class AppointmentForm(forms.ModelForm):
             'rows': 3,
             'placeholder': 'Дополнительные пожелания или примечания'
         }),
+        label="Особые пожелания",
         required=False
     )
     
@@ -103,7 +107,8 @@ class AppointmentFilterForm(forms.Form):
     status = forms.ChoiceField(
         choices=STATUS_CHOICES,
         required=False,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Статус"
     )
     
     date_from = forms.DateField(
@@ -111,7 +116,8 @@ class AppointmentFilterForm(forms.Form):
         widget=forms.DateInput(attrs={
             'class': 'form-control',
             'type': 'date'
-        })
+        }),
+        label="Дата начала"
     )
     
     date_to = forms.DateField(
@@ -119,19 +125,22 @@ class AppointmentFilterForm(forms.Form):
         widget=forms.DateInput(attrs={
             'class': 'form-control',
             'type': 'date'
-        })
+        }),
+        label="Дата окончания"
     )
     
     master = forms.ModelChoiceField(
         queryset=Master.objects.filter(is_active=True),
         required=False,
         empty_label="Все мастера",
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Мастер"
     )
     
     service = forms.ModelChoiceField(
         queryset=Service.objects.filter(is_active=True),
         required=False,
         empty_label="Все услуги",
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Услуга"
     )

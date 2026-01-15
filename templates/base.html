@@ -111,6 +111,12 @@
         .service-card .card-body {
             flex: 1;
         }
+
+        .card-img-top,
+        .img-fluid {
+            height: 300px;
+            object-fit: contain;
+        }
         
         .master-card img {
             width: 100%;
@@ -167,6 +173,9 @@
                         <a class="nav-link" href="{% url 'reviews:review_list' %}">Отзывы</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:news_list' %}">Новости</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:about' %}">О нас</a>
                     </li>
                     <li class="nav-item">
@@ -175,12 +184,21 @@
                 </ul>
                 
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:account_login' %}">Войти</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:account_signup' %}">Регистрация</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'core:profile' %}">Профиль</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'core:account_logout' %}">Выйти</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'core:account_login' %}">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'core:account_signup' %}">Регистрация</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

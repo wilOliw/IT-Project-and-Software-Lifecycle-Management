@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-md-6">
                             <h5>Информация о записи</h5>
-                            <p><strong>Мастер:</strong> {{ appointment.master.name }}</p>
+                            <p><strong>Мастер:</strong> {{ appointment.master }}</p>
                             <p><strong>Дата:</strong> {{ appointment.appointment_date }}</p>
                             <p><strong>Время:</strong> {{ appointment.start_time }} - {{ appointment.end_time }}</p>
                             <p><strong>Создано:</strong> {{ appointment.created_at|date:"d.m.Y H:i" }}</p>
