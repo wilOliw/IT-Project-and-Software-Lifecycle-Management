@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Новости - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="section-title">Новости</h1>
+    
+    <div class="row">
+        {% for news in news_list %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                {% if news.image %}
+                <img src="{{ news.image.url }}" class="card-img-top" alt="{{ news.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ news.title }}</h5>
+                    <p class="card-text">{{ news.content|truncatewords:30 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">{{ news.created_at|date:"d.m.Y" }}</small>
+                    </p>
+                    <a href="{% url 'core:news_detail' news.id %}" class="btn btn-primary">Читать далее</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>Новости не найдены</h4>
+                <p>В данный момент нет новостей.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

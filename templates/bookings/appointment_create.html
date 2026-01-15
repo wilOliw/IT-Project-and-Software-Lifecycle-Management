@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Создание записи{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Создание новой записи</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary">Создать запись</button>
+                            <a href="{% url 'bookings:appointment_list' %}" class="btn btn-secondary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Динамическое обновление доступных времен при изменении мастера, услуги или даты
+document.addEventListener('DOMContentLoaded', function() {
+    const masterSelect = document.getElementById('id_master');
+    const serviceSelect = document.getElementById('id_service');
+    const dateInput = document.getElementById('id_appointment_date');
+    const timeSelect = document.getElementById('id_start_time');
+    
+    function updateAvailableTimes() {
+        const masterId = masterSelect.value;
+        const serviceId = serviceSelect.value;
+        const date = dateInput.value;
+        
+        if (masterId && serviceId && date) {
+            fetch(`{% url 'bookings:available_times' %}?master=${masterId}&service=${serviceId}&date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    timeSelect.innerHTML = '<option value="">Выберите время</option>';
+                    data.times.forEach(time => {
+                        const option = document.createElement('option');
+                        option.value = time;
+                        option.textContent = time;
+                        timeSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+    
+    if (masterSelect) masterSelect.addEventListener('change', updateAvailableTimes);
+    if (serviceSelect) serviceSelect.addEventListener('change', updateAvailableTimes);
+    if (dateInput) dateInput.addEventListener('change', updateAvailableTimes);
+});
+</script>
+{% endblock %}

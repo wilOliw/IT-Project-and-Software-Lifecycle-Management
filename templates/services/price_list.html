@@ -1,0 +1,371 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Прайс-лист - Студия
+красоты "Элегант"{% endblock %} {% block extra_css %}
+<style>
+  .price-hero {
+    background: linear-gradient(
+      135deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+  }
+
+  .category-section {
+    margin-bottom: 50px;
+  }
+
+  .category-header {
+    background: linear-gradient(45deg, var(--accent-color), #c0392b);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 15px 15px 0 0;
+    margin-bottom: 0;
+  }
+
+  .category-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .category-header i {
+    margin-right: 15px;
+    font-size: 1.5rem;
+  }
+
+  .services-table {
+    background: white;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .table {
+    margin: 0;
+  }
+
+  .table th {
+    background-color: var(--light-gray);
+    border: none;
+    font-weight: 600;
+    color: var(--primary-color);
+    padding: 20px 15px;
+  }
+
+  .table td {
+    border: none;
+    border-bottom: 1px solid #f8f9fa;
+    padding: 20px 15px;
+    vertical-align: middle;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .service-name {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .service-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
+  .price-cell {
+    font-weight: 700;
+    color: var(--accent-color);
+    font-size: 1.1rem;
+  }
+
+  .duration-cell {
+    color: var(--secondary-color);
+    font-weight: 500;
+  }
+
+  .featured-badge {
+    background: linear-gradient(45deg, #f39c12, #e67e22);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .action-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .no-services {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--dark-gray);
+  }
+
+  .no-services i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: var(--light-gray);
+  }
+
+  .download-section {
+    background: var(--light-gray);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .download-btn {
+    background: linear-gradient(45deg, var(--accent-color), #c0392b);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .download-btn:hover {
+    transform: translateY(-2px);
+    color: white;
+  }
+</style>
+{% endblock %} {% block content %}
+<!-- Заголовок страницы -->
+<div class="price-hero">
+  <div class="container">
+    <h1 class="display-4 mb-3">Прайс-лист</h1>
+    <p class="lead">Актуальные цены на все услуги нашей студии красоты</p>
+    <p class="mb-0">
+      <i class="fas fa-info-circle me-2"></i>
+      Цены указаны без учета скидок и акций
+    </p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <!-- Секция скачивания прайса -->
+  <div class="download-section">
+    <h3 class="mb-3">Скачать прайс-лист</h3>
+    <p class="text-muted mb-4">
+      Сохраните прайс-лист на свой компьютер для удобства
+    </p>
+    <a href="#" class="download-btn" onclick="window.print()">
+      <i class="fas fa-download me-2"></i>Скачать PDF
+    </a>
+  </div>
+
+  <!-- Прайс-лист по категориям -->
+  {% if categories %} {% for category in categories %}
+  <div class="category-section">
+    <div class="category-header">
+      <h3>
+        {% if category.icon %}
+        <i class="{{ category.icon }}"></i>
+        {% else %}
+        <i class="fas fa-tag"></i>
+        {% endif %} {{ category.name }}
+      </h3>
+    </div>
+
+    {% if category.services.all %}
+    <div class="services-table">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th style="width: 40%">Услуга</th>
+            <th style="width: 30%">Описание</th>
+            <th style="width: 15%">Длительность</th>
+            <th style="width: 15%">Цена</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for service in category.services.all %} {% if service.is_active %}
+          <tr>
+            <td>
+              <div class="service-name">
+                {{ service.name }} {% if service.is_featured %}
+                <span class="featured-badge ms-2">Рекомендуем</span>
+                {% endif %}
+              </div>
+            </td>
+            <td>
+              <div class="service-description">
+                {{
+                service.short_description|default:service.description|truncatewords:10
+                }}
+              </div>
+            </td>
+            <td>
+              <span class="duration-cell">
+                <i class="fas fa-clock me-1"></i>{{ service.get_duration_display
+                }}
+              </span>
+            </td>
+            <td>
+              <span class="price-cell">{{ service.get_price_display }}</span>
+            </td>
+          </tr>
+          {% endif %} {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="services-table">
+      <div class="no-services">
+        <i class="fas fa-exclamation-circle"></i>
+        <h5>Услуги не найдены</h5>
+        <p class="text-muted">В данной категории пока нет активных услуг.</p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %} {% else %}
+  <!-- Сообщение об отсутствии категорий -->
+  <div class="no-services">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3>Прайс-лист пуст</h3>
+    <p>К сожалению, прайс-лист пока не заполнен.</p>
+    <a href="{% url 'services:service_list' %}" class="btn btn-primary">
+      <i class="fas fa-arrow-left me-2"></i>Перейти к услугам
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Дополнительная информация -->
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-info-circle text-primary me-2"></i>
+            Важная информация
+          </h5>
+          <ul class="list-unstyled">
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Все цены указаны в
+              рублях
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Длительность услуг
+              может варьироваться
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Возможны скидки при
+              записи на несколько услуг
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Актуальные акции
+              уточняйте у администратора
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-phone text-primary me-2"></i>
+            Записаться на услугу
+          </h5>
+          <p class="card-text">
+            Хотите записаться на конкретную услугу? Свяжитесь с нами или
+            воспользуйтесь онлайн-записью.
+          </p>
+          <div class="d-grid gap-2">
+            {% if user.is_authenticated %}
+            <a
+              href="{% url 'bookings:appointment_create' %}"
+              class="btn btn-primary"
+            >
+              <i class="fas fa-calendar-plus me-2"></i>Онлайн запись
+            </a>
+            {% else %}
+            <a
+              href="{% url 'core:account_login' %}?next={% url 'bookings:appointment_create' %}"
+              class="btn btn-primary"
+            >
+              <i class="fas fa-sign-in-alt me-2"></i>Войти для записи
+            </a>
+            {% endif %}
+            <a href="{% url 'core:contacts' %}" class="btn btn-outline-primary">
+              <i class="fas fa-phone me-2"></i>Связаться с нами
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Функция для печати прайс-листа
+  function printPriceList() {
+    window.print();
+  }
+
+  // Добавляем обработчик для кнопки скачивания
+  document.addEventListener("DOMContentLoaded", function () {
+    const downloadBtn = document.querySelector(".download-btn");
+    if (downloadBtn) {
+      downloadBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        printPriceList();
+      });
+    }
+  });
+</script>
+
+<!-- Стили для печати -->
+<style media="print">
+  .navbar,
+  .footer,
+  .download-section,
+  .btn,
+  .no-print {
+    display: none !important;
+  }
+
+  .price-hero {
+    background: none !important;
+    color: black !important;
+    padding: 20px 0 !important;
+  }
+
+  .category-header {
+    background: #f8f9fa !important;
+    color: black !important;
+    border: 1px solid #dee2e6;
+  }
+
+  .services-table {
+    box-shadow: none !important;
+    border: 1px solid #dee2e6;
+  }
+
+  .table th,
+  .table td {
+    border: 1px solid #dee2e6 !important;
+  }
+
+  body {
+    font-size: 12px;
+  }
+
+  .container {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+</style>
+{% endblock %}

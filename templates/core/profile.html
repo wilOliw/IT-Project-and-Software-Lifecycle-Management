@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="section-title">Личный кабинет</h1>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                    </div>
+                    <h5>{{ user.get_full_name|default:user.username }}</h5>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <p class="text-muted">Клиент с {{ user.date_joined|date:"d.m.Y" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Информация о профиле</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Имя:</h6>
+                            <p>{{ user.first_name|default:"Не указано" }}</p>
+                            
+                            <h6>Фамилия:</h6>
+                            <p>{{ user.last_name|default:"Не указано" }}</p>
+                            
+                            <h6>Email:</h6>
+                            <p>{{ user.email }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Дата регистрации:</h6>
+                            <p>{{ user.date_joined|date:"d.m.Y H:i" }}</p>
+                            
+                            <h6>Последний вход:</h6>
+                            <p>{{ user.last_login|date:"d.m.Y H:i"|default:"Никогда" }}</p>
+                            
+                            <h6>Статус:</h6>
+                            <p>
+                                {% if user.is_active %}
+                                    <span class="badge bg-success">Активен</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Неактивен</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Быстрые действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'bookings:appointment_list' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-calendar-alt me-2"></i>Мои записи
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'bookings:appointment_create' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>Записаться
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'reviews:review_list' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-star me-2"></i>Отзывы
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'core:account_logout' %}" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-sign-out-alt me-2"></i>Выйти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

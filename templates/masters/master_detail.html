@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ master.user.get_full_name|default:master.user.username }} - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                {% if master.photo %}
+                <img src="{{ master.photo.url }}" class="card-img-top" alt="{{ master.user.get_full_name }}">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                    <i class="fas fa-user fa-5x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ master.user.get_full_name|default:master.user.username }}</h5>
+                    <p class="card-text">{{ master.specialization }}</p>
+                    <p class="card-text"><small class="text-muted">Опыт: {{ master.experience_years }} лет</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2>О мастере</h2>
+            <p>{{ master.bio|default:"Информация о мастере будет добавлена позже." }}</p>
+            
+            <h3>Услуги</h3>
+            {% if master_services %}
+            <div class="row">
+                {% for master_service in master_services %}
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ master_service.service.name }}</h6>
+                            <p class="card-text">{{ master_service.service.description|truncatewords:15 }}</p>
+                            <p class="card-text"><strong>{{ master_service.price }} ₽</strong></p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">Услуги не указаны.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

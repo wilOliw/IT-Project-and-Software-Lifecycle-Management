@@ -1,0 +1,7 @@
+{% if times %}
+    {% for time in times %}
+        <option value="{{ time }}">{{ time }}</option>
+    {% endfor %}
+{% else %}
+    <option value="">Нет доступного времени</option>
+{% endif %}

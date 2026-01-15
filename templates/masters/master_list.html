@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Мастера - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="section-title">Наши мастера</h1>
+    
+    <div class="row">
+        {% for master in masters %}
+        <div class="col-md-4 mb-4">
+            <div class="card master-card">
+                {% if master.photo %}
+                <img src="{{ master.photo.url }}" class="card-img-top" alt="{{ master.user.get_full_name }}">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-user fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ master.user.get_full_name|default:master.user.username }}</h5>
+                    <p class="card-text">{{ master.specialization }}</p>
+                    <p class="card-text"><small class="text-muted">Опыт: {{ master.experience_years }} лет</small></p>
+                    <a href="{% url 'masters:master_detail' master.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>Мастера не найдены</h4>
+                <p>В данный момент нет активных мастеров.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

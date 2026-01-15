@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ portfolio_work.title }} - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            {% if portfolio_work.image %}
+            <img src="{{ portfolio_work.image.url }}" class="img-fluid rounded mb-4" alt="{{ portfolio_work.title }}">
+            {% endif %}
+            
+            <h1>{{ portfolio_work.title }}</h1>
+            <p class="text-muted">
+                Мастер: {{ portfolio_work.master.user.get_full_name|default:portfolio_work.master.user.username }}<br>
+                Услуга: {{ portfolio_work.service.name }}<br>
+                Дата: {{ portfolio_work.created_at|date:"d.m.Y" }}
+            </p>
+            
+            <div class="mt-4">
+                <h3>Описание</h3>
+                <p>{{ portfolio_work.description|linebreaks }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Информация о работе</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Мастер:</strong> {{ portfolio_work.master.user.get_full_name|default:portfolio_work.master.user.username }}</p>
+                    <p><strong>Услуга:</strong> {{ portfolio_work.service.name }}</p>
+                    <p><strong>Дата:</strong> {{ portfolio_work.created_at|date:"d.m.Y" }}</p>
+                    {% if portfolio_work.tags %}
+                    <p><strong>Теги:</strong> {{ portfolio_work.tags }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if related_works %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Другие работы мастера</h5>
+                </div>
+                <div class="card-body">
+                    {% for work in related_works %}
+                    <div class="mb-3">
+                        <a href="{% url 'portfolio:portfolio_detail' work.pk %}">
+                            {% if work.image %}
+                            <img src="{{ work.image.url }}" class="img-fluid rounded" alt="{{ work.title }}" style="height: 80px; object-fit: cover;">
+                            {% endif %}
+                            <p class="mt-1 mb-0">{{ work.title }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

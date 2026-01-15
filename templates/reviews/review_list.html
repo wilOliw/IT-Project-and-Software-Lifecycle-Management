@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Отзывы - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="section-title">Отзывы наших клиентов</h1>
+    
+    {% if total_reviews > 0 %}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>{{ avg_rating }}</h3>
+                    <div class="rating-stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= avg_rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="text-muted">Средняя оценка</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>{{ total_reviews }}</h3>
+                    <p class="text-muted">Всего отзывов</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="card-title">{{ review.client.get_full_name|default:review.client.username }}</h6>
+                        <div class="rating-stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="card-text">{{ review.comment|truncatewords:30 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Мастер: {{ review.master.user.get_full_name|default:review.master.user.username }}<br>
+                            Услуга: {{ review.service.name }}<br>
+                            {{ review.created_at|date:"d.m.Y" }}
+                        </small>
+                    </p>
+                    <a href="{% url 'reviews:review_detail' review.pk %}" class="btn btn-outline-primary btn-sm">Читать полностью</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>Отзывы не найдены</h4>
+                <p>В данный момент нет отзывов.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

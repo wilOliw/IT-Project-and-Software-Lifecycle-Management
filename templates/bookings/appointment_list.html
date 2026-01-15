@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои записи{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Мои записи</h2>
+                <a href="{% url 'bookings:appointment_create' %}" class="btn btn-primary">Создать запись</a>
+            </div>
+            
+            <!-- Фильтры -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        {{ filter_form.as_p }}
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-outline-primary">Фильтровать</button>
+                            <a href="{% url 'bookings:appointment_list' %}" class="btn btn-outline-secondary">Сбросить</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Список записей -->
+            {% if appointments %}
+                <div class="row">
+                    {% for appointment in appointments %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ appointment.service.name }}</h5>
+                                    <p class="card-text">
+                                        <strong>Мастер:</strong> {{ appointment.master.name }}<br>
+                                        <strong>Дата:</strong> {{ appointment.appointment_date }}<br>
+                                        <strong>Время:</strong> {{ appointment.start_time }} - {{ appointment.end_time }}<br>
+                                        <strong>Статус:</strong> 
+                                        <span class="badge 
+                                            {% if appointment.status == 'pending' %}bg-warning
+                                            {% elif appointment.status == 'confirmed' %}bg-success
+                                            {% elif appointment.status == 'completed' %}bg-info
+                                            {% elif appointment.status == 'cancelled' %}bg-danger
+                                            {% endif %}">
+                                            {{ appointment.get_status_display }}
+                                        </span>
+                                    </p>
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'bookings:appointment_detail' appointment.pk %}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                                        {% if appointment.status in 'pending,confirmed' %}
+                                            <a href="{% url 'bookings:appointment_edit' appointment.pk %}" class="btn btn-sm btn-outline-warning">Изменить</a>
+                                            <a href="{% url 'bookings:appointment_cancel' appointment.pk %}" class="btn btn-sm btn-outline-danger">Отменить</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Пагинация -->
+                {% if appointments.has_other_pages %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if appointments.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ appointments.previous_page_number }}">Предыдущая</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in appointments.paginator.page_range %}
+                                {% if appointments.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if appointments.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ appointments.next_page_number }}">Следующая</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <h4>У вас пока нет записей</h4>
+                    <p class="text-muted">Создайте первую запись, чтобы начать пользоваться нашими услугами</p>
+                    <a href="{% url 'bookings:appointment_create' %}" class="btn btn-primary">Создать запись</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

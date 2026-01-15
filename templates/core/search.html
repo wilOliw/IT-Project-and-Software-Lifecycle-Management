@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Поиск - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="section-title">Поиск</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Введите поисковый запрос..." value="{{ query }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Поиск
+                            </button>
+                        </div>
+                    </form>
+                    
+                    {% if query %}
+                    <h4>Результаты поиска для "{{ query }}"</h4>
+                    
+                    {% if results.services %}
+                    <h5>Услуги</h5>
+                    <div class="row">
+                        {% for service in results.services %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ service.name }}</h6>
+                                    <p class="card-text">{{ service.description|truncatewords:15 }}</p>
+                                    <a href="{% url 'services:service_detail' service.pk %}" class="btn btn-sm btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if results.masters %}
+                    <h5>Мастера</h5>
+                    <div class="row">
+                        {% for master in results.masters %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ master.user.get_full_name|default:master.user.username }}</h6>
+                                    <p class="card-text">{{ master.specialization }}</p>
+                                    <a href="{% url 'masters:master_detail' master.pk %}" class="btn btn-sm btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if results.categories %}
+                    <h5>Категории</h5>
+                    <div class="row">
+                        {% for category in results.categories %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ category.name }}</h6>
+                                    <p class="card-text">{{ category.description|truncatewords:15 }}</p>
+                                    <a href="{% url 'services:category_detail' category.pk %}" class="btn btn-sm btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if not results.services and not results.masters and not results.categories %}
+                    <div class="alert alert-info">
+                        <h5>Ничего не найдено</h5>
+                        <p>Попробуйте изменить поисковый запрос или использовать другие ключевые слова.</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% else %}
+                    <div class="text-center">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h4>Поиск по сайту</h4>
+                        <p class="text-muted">Введите поисковый запрос в поле выше, чтобы найти услуги, мастеров или категории.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Популярные запросы</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="?q=маникюр" class="badge bg-light text-dark text-decoration-none">маникюр</a>
+                        <a href="?q=педикюр" class="badge bg-light text-dark text-decoration-none">педикюр</a>
+                        <a href="?q=стрижка" class="badge bg-light text-dark text-decoration-none">стрижка</a>
+                        <a href="?q=окрашивание" class="badge bg-light text-dark text-decoration-none">окрашивание</a>
+                        <a href="?q=макияж" class="badge bg-light text-dark text-decoration-none">макияж</a>
+                        <a href="?q=брови" class="badge bg-light text-dark text-decoration-none">брови</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,210 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ category.name }}
+- Студия красоты "Элегант"{% endblock %} {% block extra_css %}
+<style>
+  .category-hero {
+    background: linear-gradient(
+      135deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+  }
+
+  .category-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  .service-card {
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .service-image {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .price-badge {
+    background: linear-gradient(45deg, var(--accent-color), #c0392b);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .duration-badge {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+  }
+
+  .category-description {
+    background-color: var(--light-gray);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+  }
+</style>
+{% endblock %} {% block content %}
+<!-- Заголовок категории -->
+<div class="category-hero">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item">
+          <a href="{% url 'core:home' %}" class="text-white">Главная</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'services:service_list' %}" class="text-white"
+            >Услуги</a
+          >
+        </li>
+        <li class="breadcrumb-item active text-white" aria-current="page">
+          {{ category.name }}
+        </li>
+      </ol>
+    </nav>
+
+    {% if category.icon %}
+    <div class="category-icon">
+      <i class="{{ category.icon }}"></i>
+    </div>
+    {% endif %}
+
+    <h1 class="display-4 mb-3">{{ category.name }}</h1>
+    {% if category.description %}
+    <p class="lead">{{ category.description }}</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container py-5">
+  <!-- Описание категории -->
+  {% if category.description %}
+  <div class="category-description">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3>О категории "{{ category.name }}"</h3>
+        <p class="mb-0">{{ category.description }}</p>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <a
+          href="{% url 'services:service_list' %}"
+          class="btn btn-outline-primary"
+        >
+          <i class="fas fa-arrow-left me-2"></i>Все услуги
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Список услуг в категории -->
+  {% if services %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="section-title">Услуги в категории "{{ category.name }}"</h2>
+      <p class="text-muted">Найдено услуг: {{ services.paginator.count }}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for service in services %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card service-card h-100">
+        {% if service.image %}
+        <img
+          src="{{ service.image.url }}"
+          class="card-img-top service-image"
+          alt="{{ service.name }}"
+        />
+        {% else %}
+        <div
+          class="card-img-top service-image bg-light d-flex align-items-center justify-content-center"
+        >
+          <i class="fas fa-spa fa-3x text-muted"></i>
+        </div>
+        {% endif %}
+
+        <div class="card-body d-flex flex-column">
+          <div class="mb-2">
+            {% if service.is_featured %}
+            <span class="badge bg-warning text-dark">Рекомендуем</span>
+            {% endif %}
+          </div>
+
+          <h5 class="card-title">{{ service.name }}</h5>
+
+          {% if service.short_description %}
+          <p class="card-text text-muted">{{ service.short_description }}</p>
+          {% else %}
+          <p class="card-text text-muted">
+            {{ service.description|truncatewords:15 }}
+          </p>
+          {% endif %}
+
+          <div class="mt-auto">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="price-badge">{{ service.get_price_display }}</span>
+              <span class="duration-badge">
+                <i class="fas fa-clock me-1"></i>
+                {{ service.get_duration_display }}
+              </span>
+            </div>
+
+            <div class="d-grid gap-2">
+              <a
+                href="{% url 'services:service_detail' service.pk %}"
+                class="btn btn-outline-primary"
+              >
+                <i class="fas fa-info-circle me-1"></i>Подробнее
+              </a>
+              {% if user.is_authenticated %}
+              <a
+                href="{% url 'bookings:appointment_create' %}?service={{ service.pk }}"
+                class="btn btn-primary"
+              >
+                <i class="fas fa-calendar-plus me-1"></i>Записаться
+              </a>
+              {% else %}
+              <a
+                href="{% url 'core:account_login' %}?next={% url 'bookings:appointment_create' %}?service={{ service.pk }}"
+                class="btn btn-primary"
+              >
+                <i class="fas fa-sign-in-alt me-1"></i>Войти для записи
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Сообщение об отсутствии услуг -->
+  <div class="text-center py-5">
+    <i class="fas fa-exclamation-circle fa-4x text-muted mb-4"></i>
+    <h3>Услуги не найдены</h3>
+    <p class="text-muted">В данной категории пока нет активных услуг.</p>
+    <a href="{% url 'services:service_list' %}" class="btn btn-primary">
+      <i class="fas fa-arrow-left me-2"></i>Вернуться к списку услуг
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

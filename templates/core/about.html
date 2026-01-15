@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}О нас - Студия красоты "Элегант"{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="section-title">О студии красоты "Элегант"</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Добро пожаловать в нашу студию!</h2>
+                    <p>Студия красоты "Элегант" работает с 2018 года, создавая красоту и уверенность в каждом клиенте. Мы предлагаем полный спектр услуг в области красоты и ухода за собой.</p>
+                    
+                    <h3>Наши преимущества:</h3>
+                    <ul>
+                        <li>Опытные мастера с многолетним стажем</li>
+                        <li>Современное оборудование и качественные материалы</li>
+                        <li>Индивидуальный подход к каждому клиенту</li>
+                        <li>Удобное расположение в центре города</li>
+                        <li>Доступные цены и гибкая система скидок</li>
+                    </ul>
+                    
+                    <h3>Наша миссия</h3>
+                    <p>Мы стремимся сделать красоту доступной для каждого, помогая нашим клиентам чувствовать себя уверенно и привлекательно в любой ситуации.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Статистика</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <h3 class="text-primary">{{ masters_count }}</h3>
+                            <p class="text-muted">Мастеров</p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h3 class="text-primary">{{ services_count }}</h3>
+                            <p class="text-muted">Услуг</p>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-primary">{{ reviews_count }}</h3>
+                            <p class="text-muted">Отзывов</p>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-primary">5+</h3>
+                            <p class="text-muted">Лет работы</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Наши ценности</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Качество</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Профессионализм</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Индивидуальность</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Комфорт</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Результат</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
